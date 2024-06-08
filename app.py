@@ -28,6 +28,7 @@ def main():
     # Create an author
     cursor.execute('INSERT INTO authors (name) VALUES (?)', (author_name,))
     author_id = cursor.lastrowid # Use this to fetch the id of the newly created author
+    #Author(1,"John Doe")
 
     # Create a magazine
     cursor.execute('INSERT INTO magazines (name, category) VALUES (?,?)', (magazine_name, magazine_category))

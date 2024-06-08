@@ -1,6 +1,6 @@
-import sqlite3
-
+from __init__ import conn,cursor
 class Author:
+    
     def __init__(self, id, name):
         self.id = id
         self.name = name
@@ -9,13 +9,15 @@ class Author:
         return f'<Author {self.name}>'
     
     def add_to_database(self):
-        conn = sqlite3.connect('./database/magazine.db')
-        cursor = conn.cursor()
+        sql = """"
+            INSERT INTO authors (id,name) VALUES (?)
+        """
+        params = (self.name,)
 
-        cursor.execute("""INSERT INTO authors (id,name) VALUES (?,?)""",(self.id,self.name))
-        cursor.fetchone()
-
+        cursor.execute(sql,params)
         conn.commit()
-        conn.close()
 
-new_author = Author(1,"John Doe")
+        self.id = cursor.lastrowid
+
+
+        
