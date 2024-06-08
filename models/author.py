@@ -1,22 +1,17 @@
-from __init__ import conn,cursor
+from database.connection import get_db_connection
+
+
 class Author:
     
     def __init__(self, id, name):
         self._id = id
         self._name = name
+        self.conn = get_db_connection()
+        self.cursor = self.conn.cursor()
 
     def __repr__(self):
         return f'<Author {self.name}>'
     
-    def create_tables(self):
-         cursor.execute('''
-        CREATE TABLE IF NOT EXISTS authors (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL
-        )
-    ''')
-    
-    conn.commit()
     
     def add_to_database(self):
         sql = """"
@@ -24,10 +19,10 @@ class Author:
         """
         params = (self._name,)
 
-        cursor.execute(sql,params)
-        conn.commit()
+        self.cursor.execute(sql,params)
+        self.conn.commit()
 
-        self.id = cursor.lastrowid
+        self.id = self.cursor.lastrowid
 
     @property
     def id(self):
@@ -46,14 +41,14 @@ class Author:
             FROM authors 
             WHERE id = ?
     """
-        cursor.execute(sql,(id,))
-        result = cursor.fetchone()
+        self.cursor.execute(sql,(id,))
+        result = self.cursor.fetchone()
         if result:
             return cls(id,result[0])
         else:
             raise ValueError(f"Author with ID {id} not found in database ")
         
-        
+
 
     @property
     def name(self):
