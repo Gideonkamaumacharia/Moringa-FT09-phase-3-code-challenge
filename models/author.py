@@ -41,8 +41,8 @@ class Author:
             FROM authors 
             WHERE id = ?
     """
-        self.cursor.execute(sql,(id,))
-        result = self.cursor.fetchone()
+        cls.cursor.execute(sql,(id,))
+        result = cls.cursor.fetchone()
         if result:
             return cls(id,result[0])
         else:
