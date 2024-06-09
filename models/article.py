@@ -1,4 +1,19 @@
 from database.connection import get_db_connection
+
+class Article:
+    def __init__(self, id, title, content, author_id, magazine_id):
+        self.id = id
+        self.title = title
+        self.content = content
+        self.author_id = author_id
+        self.magazine_id = magazine_id
+        self.conn = get_db_connection()
+        self.cursor = self.conn
+
+    def __repr__(self):
+        return f'<Article {self.title}>'
+
+    from database.connection import get_db_connection
 from models.author import Author
 from models.magazine import Magazine
 
