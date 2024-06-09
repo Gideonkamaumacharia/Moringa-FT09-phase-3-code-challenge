@@ -1,14 +1,28 @@
 from database.connection import get_db_connection
+from models.author import Author
+from models.magazine import Magazine
 
-class Author:
-   
-    def __init__(self, name):  
-        self._name = name
+class Article:
+    def __init__(self, id, title, content, author_id, magazine_id):
+        self.id = id
+        self.title = title
+        self.content = content
+        self.author_id = author_id
+        self.magazine_id = magazine_id
+
+    def __repr__(self):
+        return f'<Article {self.title}>'
+    def __init__(self, title, content, author, magazine):  # Corrected __init_ method
+        self._title = title
+        self._content = content
+        self._author = author
+        self._magazine = magazine
         self._id = None
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO authors (name) VALUES (?)', (self._name,))
+        cursor.execute('INSERT INTO articles (title, content, author_id, magazine_id) VALUES (?, ?, ?, ?)',
+                       (self._title, self._content, self._author.id, self._magazine.id))
         self._id = cursor.lastrowid
         conn.commit()
         conn.close()
@@ -18,33 +32,17 @@ class Author:
         return self._id
 
     @property
-    def name(self):
-        return self._name
+    def title(self):
+        return self._title
 
-    @name.setter
-    def name(self, value):
-        if not isinstance(value, str) or len(value) == 0:
-            raise ValueError("Name must be a non-empty string")
-        self._name = value
+    @property
+    def content(self):
+        return self._content
 
-    def articles(self):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM articles WHERE author_id = ?', (self.id,))
-        articles = cursor.fetchall()
-        conn.close()
-        return articles
+    @property
+    def author(self):
+        return self._author
 
-    def __repr__(self):
-        return f'<Author {self.name}>'
-    def magazines(self):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('''
-            SELECT DISTINCT magazines.* FROM magazines
-            JOIN articles ON articles.magazine_id = magazines.id
-            WHERE articles.author_id = ?
-        ''', (self.id,))
-        magazines = cursor.fetchall()
-        conn.close()
-        return magazines
+    @property
+    def magazine(self):
+        return self._magazine

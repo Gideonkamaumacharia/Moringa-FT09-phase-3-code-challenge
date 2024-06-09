@@ -15,7 +15,7 @@ class Author:
     
     def add_to_database(self):
         sql = """"
-            INSERT INTO authors (id,name) VALUES (?)
+            INSERT INTO authors (name) VALUES (?)
         """
         params = (self._name,)
 
